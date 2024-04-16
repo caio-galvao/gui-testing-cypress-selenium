@@ -78,8 +78,27 @@ describe('groups', () => {
       assert(bodyText.includes('Customer group has been successfully created.'));
   });
 
-  it('test case 3', async () => {
-    // Implement your test case 3 code here
+  it('remove the group test', async () => {
+    // Click in groups in side menu
+    await driver.findElement(By.linkText('Groups')).click();
+
+    // Type in value input to search for specify group
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('test');
+
+    // Click in filter blue button
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+
+    // Click in delete of the last group
+    const buttons = await driver.findElements(By.css('*[class^="ui red labeled icon button"]'));
+    await buttons[buttons.length - 1].click();
+
+    // Click on yes to confirm
+    await driver.findElement(By.id('confirmation-button')).click();
+  
+    // Assert that group has been delete
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Customer group has been successfully deleted.'));
+
   });
 
   // Implement the remaining test cases in a similar manner
