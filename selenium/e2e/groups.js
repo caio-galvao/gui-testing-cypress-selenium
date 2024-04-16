@@ -23,7 +23,7 @@ describe('groups', () => {
   });
 
   // Remove .only and implement others test cases!
-  it.only('update the name of Wholesale group', async () => {
+  it('update the name of Wholesale group', async () => {
     // Click in groups in side menu
     await driver.findElement(By.linkText('Groups')).click();
 
@@ -51,8 +51,31 @@ describe('groups', () => {
     assert(bodyText.includes('Customer group has been successfully updated.'));
   });
 
-  it('test case 2', async () => {
-    // Implement your test case 2 code here
+  it('create a new group called test', async () => {
+      // Click in groups in side menu
+      await driver.findElement(By.linkText('Groups')).click();
+
+      // Click on Create button
+      await driver.findElement(By.linkText('Create')).click();
+  
+      // Insert the code for the new group
+      const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
+      inputCode.click();
+      inputCode.clear();
+      inputCode.sendKeys('test');
+
+      // Insert the name for the new group
+      const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
+      inputName.click();
+      inputName.clear();
+      inputName.sendKeys('Test');
+
+      // Click on Create button
+      await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+
+      // Assert that group has been created
+      const bodyText = await driver.findElement(By.tagName('body')).getText();
+      assert(bodyText.includes('Customer group has been successfully created.'));
   });
 
   it('test case 3', async () => {
