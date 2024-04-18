@@ -52,30 +52,30 @@ describe('groups', () => {
   });
 
   it('create a new group called test', async () => {
-      // Click in groups in side menu
-      await driver.findElement(By.linkText('Groups')).click();
+    // Click in groups in side menu
+    await driver.findElement(By.linkText('Groups')).click();
 
-      // Click on Create button
-      await driver.findElement(By.linkText('Create')).click();
-  
-      // Insert the code for the new group
-      const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
-      inputCode.click();
-      inputCode.clear();
-      inputCode.sendKeys('test');
+    // Click on Create button
+    await driver.findElement(By.linkText('Create')).click();
 
-      // Insert the name for the new group
-      const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
-      inputName.click();
-      inputName.clear();
-      inputName.sendKeys('Test');
+    // Insert the code for the new group
+    const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
+    inputCode.click();
+    inputCode.clear();
+    inputCode.sendKeys('test');
 
-      // Click on Create button
-      await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+    // Insert the name for the new group
+    const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
+    inputName.click();
+    inputName.clear();
+    inputName.sendKeys('Test');
 
-      // Assert that group has been created
-      const bodyText = await driver.findElement(By.tagName('body')).getText();
-      assert(bodyText.includes('Customer group has been successfully created.'));
+    // Click on Create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+
+    // Assert that group has been created
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Customer group has been successfully created.'));
   });
 
   it('try to create a new group with existing code', async () => {
@@ -106,7 +106,34 @@ describe('groups', () => {
   
     const bodyText = await driver.findElement(By.tagName('body')).getText();
     assert(bodyText.includes('This form contains errors.'));
-});
+  });
+
+  it('create a new group different code but existing name', async () => {
+    // Click in groups in side menu
+    await driver.findElement(By.linkText('Groups')).click();
+
+    // Click on Create button
+    await driver.findElement(By.linkText('Create')).click();
+
+    // Insert the code for the new group
+    const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
+    inputCode.click();
+    inputCode.clear();
+    inputCode.sendKeys('new_retail');
+
+    // Insert the name for the new group
+    const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
+    inputName.click();
+    inputName.clear();
+    inputName.sendKeys('Retail');
+
+    // Click on Create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+
+    // Assert that group has been created
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Customer group has been successfully created.'));
+  });
 
   it('remove the group test', async () => {
     // Click in groups in side menu
@@ -124,10 +151,37 @@ describe('groups', () => {
 
     // Click on yes to confirm
     await driver.findElement(By.id('confirmation-button')).click();
-  
+
     // Assert that group has been delete
     const bodyText = await driver.findElement(By.tagName('body')).getText();
     assert(bodyText.includes('Customer group has been successfully deleted.'));
+
+  });
+
+  it('remove the group new_retail by checkbox', async () => {
+    // Click in groups in side menu
+    await driver.findElement(By.linkText('Groups')).click();
+
+    // Type in value input to search for specify group
+    await driver.findElement(By.id('criteria_search_value')).sendKeys('new_retail');
+
+    // Click in filter blue button
+    await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
+
+    // Click in the checkbox of the last group
+    const checkboxes = await driver.findElements(By.css('*[class^="bulk-select-checkbox"]'));
+    await checkboxes[checkboxes.length - 1].click();
+
+    // Click on the first delete button
+    const buttons = await driver.findElements(By.css('*[class^="ui red labeled icon button"]'));
+    await buttons[0].click();
+
+    // Click on yes to confirm
+    await driver.findElement(By.id('confirmation-button')).click();
+
+    // Assert that group has been delete
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('Customer_groups have been successfully deleted.'));
 
   });
 
