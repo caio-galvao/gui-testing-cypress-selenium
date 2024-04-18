@@ -78,6 +78,36 @@ describe('groups', () => {
       assert(bodyText.includes('Customer group has been successfully created.'));
   });
 
+  it('try to create a new group with existing code', async () => {
+    // Click in groups in side menu
+    await driver.findElement(By.linkText('Groups')).click();
+
+    // Click on Create button
+    await driver.findElement(By.linkText('Create')).click();
+
+    // Insert the code for the new group
+    const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
+    inputCode.click();
+    inputCode.clear();
+    inputCode.sendKeys('retail');
+
+    // Insert the name for the new group
+    const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
+    inputName.click();
+    inputName.clear();
+    inputName.sendKeys('Retail');
+
+    // Click on Create button
+    await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
+
+    // Assert the error mesages
+    const errorText = await driver.findElement(By.css('*[class^="ui red pointing label sylius-validation-error"]')).getText();
+    assert(errorText.includes('Customer group code has to be unique.'));
+  
+    const bodyText = await driver.findElement(By.tagName('body')).getText();
+    assert(bodyText.includes('This form contains errors.'));
+});
+
   it('remove the group test', async () => {
     // Click in groups in side menu
     await driver.findElement(By.linkText('Groups')).click();
