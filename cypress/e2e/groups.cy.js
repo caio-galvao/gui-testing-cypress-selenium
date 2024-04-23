@@ -89,4 +89,108 @@ describe('groups', () => {
     cy.get('tbody > :nth-child(3) > :nth-child(3)').should('be.visible');
     /* ==== End Cypress Studio ==== */
   });
+  it('create a new group called test', () => {
+    // Click in groups in side menu
+    cy.contains('Groups').click();
+
+    // Click on Create button
+    cy.contains('Create').click();
+
+    // Insert the code for the new group
+    cy.get('#sylius_customer_group_code').type('test');
+
+    // Insert the name for the new group
+    cy.get('#sylius_customer_group_name').type('Test');
+
+    // Click on Create button
+    cy.get('.ui.labeled.icon.primary.button').click();
+
+    // Assert that group has been created
+    cy.contains('Customer group has been successfully created.').should('be.visible');
+});
+
+it('try to create a new group with existing code', () => {
+    // Click in groups in side menu
+    cy.contains('Groups').click();
+
+    // Click on Create button
+    cy.contains('Create').click();
+
+    // Insert the code for the new group
+    cy.get('#sylius_customer_group_code').type('retail');
+
+    // Insert the name for the new group
+    cy.get('#sylius_customer_group_name').type('Retail');
+
+    // Click on Create button
+    cy.get('.ui.labeled.icon.primary.button').click();
+
+    // Assert the error messages
+    cy.get('.ui.red.pointing.label.sylius-validation-error').should('contain', 'Customer group code has to be unique.');
+    cy.contains('This form contains errors.').should('be.visible');
+});
+
+it('create a new group different code but existing name', () => {
+    // Click in groups in side menu
+    cy.contains('Groups').click();
+
+    // Click on Create button
+    cy.contains('Create').click();
+
+    // Insert the code for the new group
+    cy.get('#sylius_customer_group_code').type('new_retail');
+
+    // Insert the name for the new group
+    cy.get('#sylius_customer_group_name').type('Retail');
+
+    // Click on Create button
+    cy.get('.ui.labeled.icon.primary.button').click();
+
+    // Assert that group has been created
+    cy.contains('Customer group has been successfully created.').should('be.visible');
+});
+
+it('remove the group test', () => {
+    // Click in groups in side menu
+    cy.contains('Groups').click();
+
+    // Type in value input to search for specify group
+    cy.get('#criteria_search_value').type('test');
+
+    // Click in filter blue button
+    cy.get('.ui.blue.labeled.icon.button').click();
+
+    // Click in delete of the last group
+    cy.get('.ui.red.labeled.icon.button').last().click();
+
+    // Click on yes to confirm
+    cy.get('#confirmation-button').click();
+
+    // Assert that group has been deleted
+    cy.contains('Customer group has been successfully deleted.').should('be.visible');
+});
+
+it('remove the group new_retail by checkbox', () => {
+    // Click in groups in side menu
+    cy.contains('Groups').click();
+
+    // Type in value input to search for specify group
+    cy.get('#criteria_search_value').type('new_retail');
+
+    // Click in filter blue button
+    cy.get('.ui.blue.labeled.icon.button').click();
+
+    // Click in the checkbox of the last group
+    cy.get('.bulk-select-checkbox').last().click();
+
+    // Click on the first delete button
+    cy.get('.ui.red.labeled.icon.button').first().click();
+
+    // Click on yes to confirm
+    cy.get('#confirmation-button').click();
+
+    // Assert that group has been deleted
+    cy.contains('Customer_groups have been successfully deleted.').should('be.visible');
+});
+
 });
