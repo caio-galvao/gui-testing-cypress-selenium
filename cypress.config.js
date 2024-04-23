@@ -7,5 +7,6 @@ module.exports = defineConfig({
     // baseUrl: 'http://150.165.75.99:9990',
     viewportWidth: 1280,
     viewportHeight: 720,
+    experimentalStudio: true
   },
 });
