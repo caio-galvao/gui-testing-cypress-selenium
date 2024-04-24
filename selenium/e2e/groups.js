@@ -51,89 +51,93 @@ describe('groups', () => {
     assert(bodyText.includes('Customer group has been successfully updated.'));
   });
 
-/*   it('filter by "retail"', async () => {
+  it('filter by "retail"', async () => {
     await driver.findElement(By.linkText('Groups')).click();
     
-    //cy.get('#criteria_search_value').clear('re');
-
     await driver.findElement(By.id('criteria_search_value')).sendKeys('retail');
     await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
 
-    const item = await driver.findElement(By.css('.item td:nth-child(3)'));
+    const item = await driver.findElement(By.css('.item td:nth-child(3)')).getText();;
     assert(item.includes('Retail'));
-  }); */
+  });
 
-/*   it('filter by "100" after adding another group with "100" in the name', async () => {
+  it('filter by "100" after adding another group with "100" in the name', async () => {
     await driver.findElement(By.linkText('Groups')).click();
 
-    //cy.get('.right > .ui').click();
     await driver.findElement(By.linkText('Create')).click();
 
-    //cy.get('#sylius_customer_group_code').clear('a');
-    //cy.get('#sylius_customer_group_code').type('aux');
     const inputCode = await driver.findElement(By.id('sylius_customer_group_code'));
     inputCode.click();
     inputCode.clear();
     inputCode.sendKeys('aux');
 
-    //cy.get('#sylius_customer_group_name').clear('n');
-    //cy.get('#sylius_customer_group_name').type('vinyl sale 100');
     const inputName = await driver.findElement(By.id('sylius_customer_group_name'));
     inputName.click();
     inputName.clear();
     inputName.sendKeys('vinyl sale 100');
 
-    //cy.get('.labeled > .plus').click();
     await driver.findElement(By.css('*[class^="ui labeled icon primary button"]')).click();
     
-    cy.get('.breadcrumb > [href="/admin/customer-groups/"]').click();
-    
-    //cy.get('#criteria_search_value').clear('1');
+    await driver.findElement(By.css('.breadcrumb > [href="/admin/customer-groups/"]')).click();
+
     await driver.findElement(By.id('criteria_search_value')).sendKeys('100');
     await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
 
-    cy.get('tbody > :nth-child(1) > :nth-child(3)').should('have.text', 'vinyl sale 100');
-    cy.get('tbody > :nth-child(2) > :nth-child(3)').should('have.text', 'Wholesale 100');
-  }); */
-
-/*   it('sort reverse alphabetically by "name"', async () => {
-    await driver.findElement(By.linkText('Groups')).click();
-
-    cy.get('.sorted').click();
-    cy.get('tbody > :nth-child(1) > :nth-child(3)').should('have.text', 'Wholesale 100');
-    cy.get('tbody > :nth-child(2) > :nth-child(3)').should('have.text', 'vinyl sale 100');
-    cy.get('tbody > :nth-child(3) > :nth-child(3)').should('have.text', 'Retail');
+    const item1 = await driver.findElement(By.css('tbody > :nth-child(1) > :nth-child(3)')).getText();;
+    assert(item1.includes('vinyl sale 100'));
+    const item2 = await driver.findElement(By.css('tbody > :nth-child(2) > :nth-child(3)')).getText();;
+    assert(item2.includes('Wholesale 100'));
   });
- */
-/*   it('sort alphabetically by "code"', async () => {
+
+  it('sort reverse alphabetically by "name"', async () => {
     await driver.findElement(By.linkText('Groups')).click();
 
-    cy.get('.sort').click();
-    cy.get('tbody > :nth-child(1) > :nth-child(2)').should('have.text', 'aux');
-    cy.get('tbody > :nth-child(2) > :nth-child(2)').should('have.text', 'retail');
-    cy.get('tbody > :nth-child(3) > :nth-child(2)').should('have.text', 'wholesale');
-  }); */
+    await driver.findElement(By.css('.sorted')).click();
 
-/*   it('filter by starting with "v" then clear the filter', async () => {
+    const item1 = await driver.findElement(By.css('tbody > :nth-child(1) > :nth-child(3)')).getText();;
+    assert(item1.includes('Wholesale 100'));
+    const item2 = await driver.findElement(By.css('tbody > :nth-child(2) > :nth-child(3)')).getText();;
+    assert(item2.includes('vinyl sale 100'));
+    const item3 = await driver.findElement(By.css('tbody > :nth-child(3) > :nth-child(3)')).getText();;
+    assert(item3.includes('Retail'));
+  });
+
+  it('sort alphabetically by "code"', async () => {
     await driver.findElement(By.linkText('Groups')).click();
 
-    cy.get('#criteria_search_type').select('starts_with');
+    await driver.findElement(By.css('.sort')).click();
+
+    const item1 = await driver.findElement(By.css('tbody > :nth-child(1) > :nth-child(2)')).getText();;
+    assert(item1.includes('aux'));
+    const item2 = await driver.findElement(By.css('tbody > :nth-child(2) > :nth-child(2)')).getText();;
+    assert(item2.includes('retail'));
+    const item3 = await driver.findElement(By.css('tbody > :nth-child(3) > :nth-child(2)')).getText();;
+    assert(item3.includes('wholesale'));
+  });
+
+  it('filter by starting with "v" then clear the filter', async () => {
+    await driver.findElement(By.linkText('Groups')).click();
+
+    await driver.findElement(By.css('#criteria_search_type')).click();
+    await driver.findElement(By.css('#criteria_search_type option[value="starts_with"]')).click();
     
-    //cy.get('#criteria_search_value').clear('v');
-    //cy.get('#criteria_search_value').type('v');
     await driver.findElement(By.id('criteria_search_value')).sendKeys('v');
-
-    //cy.get('.blue').click();
     await driver.findElement(By.css('*[class^="ui blue labeled icon button"]')).click();
 
-    cy.get('tbody > .item > :nth-child(3)').should('have.text', 'vinyl sale 100');
-    cy.get('.loadable > a.ui').click();
-    cy.get('tbody > :nth-child(1) > :nth-child(3)').should('be.visible');
-    cy.get('tbody > :nth-child(2) > :nth-child(3)').should('be.visible');
-    cy.get('tbody > :nth-child(3) > :nth-child(3)').should('be.visible');
-  }); */
+    const item1 = await driver.findElement(By.css('tbody > .item > :nth-child(3)')).getText();
+    assert(item1.includes('vinyl sale 100'));
 
-/*   it('create a new group called test', async () => {
+    await driver.findElement(By.css('.loadable > a.ui')).click();
+    
+    const item2 = await driver.findElement(By.css('tbody > :nth-child(1) > :nth-child(3)'));
+    assert(item2.isDisplayed())
+    const item3 = await driver.findElement(By.css('tbody > :nth-child(2) > :nth-child(3)'));
+    assert(item3.isDisplayed())
+    const item4 = await driver.findElement(By.css('tbody > :nth-child(3) > :nth-child(3)'));
+    assert(item4.isDisplayed())
+  });
+
+  it('create a new group called test', async () => {
     // Click in groups in side menu
     await driver.findElement(By.linkText('Groups')).click();
 
@@ -265,7 +269,5 @@ describe('groups', () => {
     const bodyText = await driver.findElement(By.tagName('body')).getText();
     assert(bodyText.includes('Customer_groups have been successfully deleted.'));
 
-  }); */
-
-  // Implement the remaining test cases in a similar manner
+  });
 });
